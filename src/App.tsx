@@ -2,12 +2,14 @@ import data from '../data.json'
 import type { Product, CartItem } from './types'
 import { useState } from 'react';
 import AddButton from './components/AddButton';
+import Confirmed from './components/Confirmed';
 import './App.css'
 
 
 
 function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   const products: Product[] = data.map((item, i) => ({
     id: `prod-${i}`,
@@ -18,6 +20,10 @@ function App() {
     category: item.category,
     price: item.price,
   }))
+
+  const handleOrderConfirmed = () => {
+    setOrderConfirmed(!orderConfirmed);
+  };
 
   return (
     <>
@@ -38,8 +44,8 @@ function App() {
                 alt={product.name}
                 loading='lazy'
               />
-                <AddButton 
-                />
+                <AddButton orderConfirmed={orderConfirmed}/>
+
               <p>{product.category}</p>
               <h2 className='product__name'>{product.name}</h2>
               <p className='product__price'>${product.price.toFixed(2)}</p>
@@ -47,6 +53,7 @@ function App() {
             </div>
           ))}
         </div>
+        <Confirmed  onConfirm={handleOrderConfirmed}/>
       </div>
 
     </div>
