@@ -1,7 +1,21 @@
-import React, { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const AddButton = () => {
+interface AddButtonProps {
+    orderConfirmed: boolean;
+}
+
+
+const AddButton:React.FC<AddButtonProps> = ({orderConfirmed}) => {
     const [quantity, setQuantity] = useState(0);
+
+    // Reset quantity only when orderConfirmed transitions from `true` -> `false`
+    const prevOrderConfirmed = useRef(orderConfirmed);
+    useEffect(() => {
+        if (prevOrderConfirmed.current === true && orderConfirmed === false) {
+            setQuantity(0);
+        }
+        prevOrderConfirmed.current = orderConfirmed;
+    }, [orderConfirmed]);
 
     const handelAdd = () => {
         setQuantity(1);
