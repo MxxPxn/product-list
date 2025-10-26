@@ -2,14 +2,14 @@ import data from '../data.json'
 import type { Product, CartItem } from './types'
 import { useState } from 'react';
 import AddButton from './components/AddButton';
-import Confirmed from './components/Confirmed';
+import Cart from './components/Cart';
 import './App.css'
 
 
 
 function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
+
 
   const products: Product[] = data.map((item, i) => ({
     id: `prod-${i}`,
@@ -21,8 +21,53 @@ function App() {
     price: item.price,
   }))
 
-  const handleOrderConfirmed = () => {
-    setOrderConfirmed(!orderConfirmed);
+  const getCartQuantity = (productId: string): number => {
+    const item = cart.find((cartItem) => cartItem.product.id === productId);
+    return item ? item.quantity : 0;
+  };
+
+
+  const handleAddToCart = (product: Product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.product.id === product.id);
+      if(existingItem){
+        return prevCart.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { product, quantity: 1 }];
+    });
+}
+const handleIncrease = (productId: string) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.product.id === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  const handleDecrease = (productId: string) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.product.id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const handleRemoveItem = (productId: string) => {
+    if (productId === 'ALL') {
+      setCart([]);
+    } else {
+      setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+    }
   };
 
   return (
@@ -44,7 +89,11 @@ function App() {
                 alt={product.name}
                 loading='lazy'
               />
-                <AddButton orderConfirmed={orderConfirmed}/>
+                <AddButton 
+                quantity={getCartQuantity(product.id)}
+                onAddToCart={() => handleAddToCart(product)}
+                onIncrease={() => handleIncrease(product.id)}
+                onDecrease={() => handleDecrease(product.id)} orderConfirmed={false}                />
 
               <p>{product.category}</p>
               <h2 className='product__name'>{product.name}</h2>
@@ -53,7 +102,14 @@ function App() {
             </div>
           ))}
         </div>
-        <Confirmed  onConfirm={handleOrderConfirmed}/>
+      
+      </div>
+      <div className='dessert__cart'>
+       <Cart
+          cart={cart}
+          onRemoveItem={handleRemoveItem}
+        />
+          
       </div>
 
     </div>
