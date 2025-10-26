@@ -1,40 +1,25 @@
-import { useState, useEffect, useRef } from "react";
+import React from "react";
 
 interface AddButtonProps {
     orderConfirmed: boolean;
+    quantity: number;
+    onAddToCart: () => void;
+    onIncrease: () => void;
+    onDecrease: () => void;
 }
 
 
-const AddButton:React.FC<AddButtonProps> = ({orderConfirmed}) => {
-    const [quantity, setQuantity] = useState(0);
-
-    // Reset quantity only when orderConfirmed transitions from `true` -> `false`
-    const prevOrderConfirmed = useRef(orderConfirmed);
-    useEffect(() => {
-        if (prevOrderConfirmed.current === true && orderConfirmed === false) {
-            setQuantity(0);
-        }
-        prevOrderConfirmed.current = orderConfirmed;
-    }, [orderConfirmed]);
-
-    const handelAdd = () => {
-        setQuantity(1);
-    }
-    const handleIncrease = () => {
-        setQuantity((prev: number) => prev + 1);
-    }
-    const handleDecrease = () => {
-       setQuantity((prev: number) => {
-        if (prev === 1){
-            return 0;
-        }
-        return prev - 1;
-       })
-    }
+const AddButton: React.FC<AddButtonProps> = ({
+    quantity,
+    onAddToCart,
+    onIncrease,
+    onDecrease
+}) => {
+   
     if (quantity === 0) {
         return (
             <button
-            onClick={handelAdd}
+            onClick={onAddToCart}
             className="add-to-cart-btn">
                 Add to Cart
             </button>
@@ -43,13 +28,13 @@ const AddButton:React.FC<AddButtonProps> = ({orderConfirmed}) => {
     return (
         <div className="quantity-controls">
         <button
-        onClick={handleDecrease}
+        onClick={onDecrease}
         className="quantity-btn">
             -
         </button>
         <span className="quantity-display">{quantity}</span>
          <button
-        onClick={handleIncrease}
+        onClick={onIncrease}
         className="quantity-btn">
             +
         </button>
