@@ -108,6 +108,8 @@ const handleIncrease = (productId: string) => {
        <Cart
           cart={cart}
           onRemoveItem={handleRemoveItem}
+          onIncrease={handleIncrease}
+          onDecrease={handleDecrease}
         />
           
       </div>
