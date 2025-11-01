@@ -6,20 +6,26 @@ import type { CartItem } from "../types";
 interface CartProps {
   cart: CartItem[];
   onRemoveItem: (productId: string) => void;
+  onClearCart: () => void;
   onIncrease: (productId: string) => void;
   onDecrease: (productId: string) => void;
 }
 
-const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onIncrease, onDecrease }) => {
+const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onClearCart, onIncrease, onDecrease }) => {
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
-  const handleConfirmOrder = () => {
-    setOrderConfirmed(!orderConfirmed);
-    if (orderConfirmed) {
-      onRemoveItem('ALL');
-    }
-  };
+const handleConfirmOrder = () => {
+  if (!orderConfirmed) {
+    setOrderConfirmed(true);
+    alert('Order confirmed!'); // Or show modal
+  } else {
+    // Start new order
+    setOrderConfirmed(false);
+    onClearCart(); 
+  }
+};
+
   if (cart.length === 0) {
     return (
       <div>
@@ -43,22 +49,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onIncrease, onDecrease 
               ${(item.product.price * item.quantity).toFixed(2)}
             </p>
           </div>
-
-          <div className="quantity-controls">
-            <button
-              onClick={() => onDecrease(item.product.id)}
-              className="quantity-btn"
-            >
-              -
-            </button>
-            <span className="quantity-display">{item.quantity}</span>
-            <button
-              onClick={() => onIncrease(item.product.id)}
-              className="quantity-btn"
-            >
-              +
-            </button>
-          </div>
+          <button onClick={() => onRemoveItem(item.product.id)}>×</button>
         </div>
       ))}
       </div>
