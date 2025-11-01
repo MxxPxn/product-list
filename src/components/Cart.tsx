@@ -20,10 +20,19 @@ const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onIncrease, onDecrease 
       onRemoveItem('ALL');
     }
   };
+  if (cart.length === 0) {
+    return (
+      <div>
+        <h2>Your Cart is Empty</h2>
+        <p>Your added items will appear here</p>
+      </div>
+    );
+  }
 
   return (
     <div>
       <h2>Your Cart ({cart.length})</h2>
+      <div className="cart-item__body">
       {cart.map(item => (
         <div key={item.product.id} className='cart-item'>
           <div className="cart-item__info">
@@ -52,6 +61,8 @@ const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onIncrease, onDecrease 
           </div>
         </div>
       ))}
+      </div>
+
       <div className="cart__total">
         Total: ${total.toFixed(2)}
       </div>
