@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { CartItem } from "../types";
+import OrderConfirmationModal from "./OrderConfirmationModal";
 
 
 
@@ -11,19 +12,16 @@ interface CartProps {
   onDecrease: (productId: string) => void;
 }
 
-const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onClearCart, onIncrease, onDecrease }) => {
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
+const Cart: React.FC<CartProps> = ({ cart, onRemoveItem, onClearCart}) => {
+  const [showModal, setShowModal] = useState(false);
   const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
 const handleConfirmOrder = () => {
-  if (!orderConfirmed) {
-    setOrderConfirmed(true);
-    alert('Order confirmed!'); // Or show modal
-  } else {
-    // Start new order
-    setOrderConfirmed(false);
-    onClearCart(); 
-  }
+ setShowModal(true);
+};
+const handleStartNewOrder = () => {
+  setShowModal(false);  // Hide modal
+  onClearCart();        // Clear the cart
 };
 
   if (cart.length === 0) {
@@ -36,6 +34,7 @@ const handleConfirmOrder = () => {
   }
 
   return (
+    <>
     <div>
       <h2>Your Cart ({cart.length})</h2>
       <div className="cart-item__body">
@@ -58,9 +57,17 @@ const handleConfirmOrder = () => {
         Total: ${total.toFixed(2)}
       </div>
       <button onClick={handleConfirmOrder}>
-        {orderConfirmed ? "Start New Order" : "Confirm Order"}
+        Confirm Order
       </button>
     </div>
+    {showModal && (
+      <OrderConfirmationModal 
+        cart={cart}
+        total={total}
+        onClose={handleStartNewOrder}
+      />
+    )}
+    </>
   );
 }
 
