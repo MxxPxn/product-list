@@ -10,7 +10,6 @@ import './App.css'
 function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-
   const products: Product[] = data.map((item, i) => ({
     id: `prod-${i}`,
     image: typeof item.image === 'string'
@@ -27,19 +26,33 @@ function App() {
   };
 
 
-  const handleAddToCart = (product: Product) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.product.id === product.id);
-      if(existingItem){
-        return prevCart.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevCart, { product, quantity: 1 }];
-    });
-}
+const handleAddToCart = (product: Product) => {
+  // Resolve image URL before adding to cart
+  const resolvedProduct = {
+    ...product,
+    image: product.image.startsWith('./')
+      ? new URL(product.image, import.meta.url).href
+      : product.image
+  };
+
+  setCart(prevCart => {
+    const existingItem = prevCart.find(item => item.product.id === product.id);
+    
+    if (existingItem) {
+      return prevCart.map(item =>
+        item.product.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
+    
+    return [...prevCart, { product: resolvedProduct, quantity: 1 }];
+  });
+};
+const handleClearCart = () => {
+    setCart([]);
+  };
+
 const handleIncrease = (productId: string) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
@@ -93,11 +106,13 @@ const handleIncrease = (productId: string) => {
                 quantity={getCartQuantity(product.id)}
                 onAddToCart={() => handleAddToCart(product)}
                 onIncrease={() => handleIncrease(product.id)}
-                onDecrease={() => handleDecrease(product.id)} orderConfirmed={false}                />
-
-              <p>{product.category}</p>
-              <h2 className='product__name'>{product.name}</h2>
-              <p className='product__price'>${product.price.toFixed(2)}</p>
+                onDecrease={() => handleDecrease(product.id)} orderConfirmed={false}
+              />
+                <div className='product__info'>
+                <p>{product.category}</p>
+                <h2 className='product__name'>{product.name}</h2>
+                <p className='product__price'>${product.price.toFixed(2)}</p>
+              </div>
               
             </div>
           ))}
@@ -108,6 +123,7 @@ const handleIncrease = (productId: string) => {
        <Cart
           cart={cart}
           onRemoveItem={handleRemoveItem}
+          onClearCart={handleClearCart}
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
         />
