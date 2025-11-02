@@ -1,22 +1,27 @@
 .desserts__wrapper{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     padding: 40px;
-    gap: 20px;
+    
+}
+
+.desserts__body{
+    width: 80%;
 }
 .products__grid{
     display: grid;
-    width: 60%;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 .product__image{
-    width: 100%;
-    height: auto;
+    display: flex;
+    width: 80%;
     border-radius: 8px;
 }
 .product__card{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
    
 }
 .dessert__cart{
@@ -27,4 +32,14 @@
     border-radius: 8px;
     padding: 20px;
     height: fit-content;
+}
+
+.cart-item__info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.add-to-cart-btn{
+   
 }
