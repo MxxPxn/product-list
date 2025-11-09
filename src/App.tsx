@@ -92,6 +92,7 @@ const handleIncrease = (productId: string) => {
         <div className='products__grid'>
           {products.map((product) => (
             <div key={product.id} className='product__card'>
+              <div className='product__image-container'>
               <img
                 className='product__image'
                 src={
@@ -101,6 +102,8 @@ const handleIncrease = (productId: string) => {
                 }
                 alt={product.name}
                 loading='lazy'
+
+                
               />
                 <AddButton 
                 quantity={getCartQuantity(product.id)}
@@ -108,18 +111,18 @@ const handleIncrease = (productId: string) => {
                 onIncrease={() => handleIncrease(product.id)}
                 onDecrease={() => handleDecrease(product.id)} orderConfirmed={false}
               />
-                <div className='product__info'>
-                <p>{product.category}</p>
-                <h2 className='product__name'>{product.name}</h2>
-                <p className='product__price'>${product.price.toFixed(2)}</p>
               </div>
-              
+                <div className='product__info'>
+                  <p>{product.category}</p>
+                  <h2 className='product__name'>{product.name}</h2>
+                  <p className='product__price'>${product.price.toFixed(2)}</p>
+              </div>
+
             </div>
           ))}
         </div>
       
       </div>
-      <div className='dessert__cart'>
        <Cart
           cart={cart}
           onRemoveItem={handleRemoveItem}
@@ -127,9 +130,6 @@ const handleIncrease = (productId: string) => {
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
         />
-          
-      </div>
-
     </div>
     </>
   )
