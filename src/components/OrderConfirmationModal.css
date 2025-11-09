@@ -24,6 +24,20 @@
   overflow-y: auto;
   z-index: 1001;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  
+  /* Animation */
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translate(-50%, 100%); /* Start from bottom (off-screen) */
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%); /* End at center */
+    opacity: 1;
+  }
 }
 
 /* Success icon - green checkmark circle */
@@ -78,7 +92,6 @@
   padding-bottom: 0;
 }
 
-/* Product thumbnail */
 .modal-item img {
   width: 50px;
   height: 50px;
@@ -87,7 +100,6 @@
   flex-shrink: 0;
 }
 
-/* Item info - left side */
 .modal-item-info {
   flex: 1;
 }
@@ -115,7 +127,7 @@
   color: #9ca3af;
 }
 
-/* Item price - right side */
+/* Item price  right side */
 .modal-item-price {
   font-weight: 600;
   font-size: 16px;
