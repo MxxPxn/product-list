@@ -1,4 +1,5 @@
 import React from "react";
+import CartIcon from '../assets/images/icon-add-to-cart.svg';
 
 interface AddButtonProps {
     orderConfirmed: boolean;
@@ -21,6 +22,7 @@ const AddButton: React.FC<AddButtonProps> = ({
             <button
             onClick={onAddToCart}
             className="add-to-cart-btn">
+                <img src={CartIcon} alt="add to cart" className="cart-icon"/>
                 Add to Cart
             </button>
         )
