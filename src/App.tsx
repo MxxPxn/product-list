@@ -31,9 +31,9 @@ const handleAddToCart = (product: Product) => {
   const resolvedProduct = {
     ...product,
     image: product.image.startsWith('./')
-      ? import.meta.env.MODE === 'production'
-        ? `/product-list${product.image.substring(1)}`  // Remove the dot from ./assets
-        : new URL(product.image, import.meta.url).href
+      // ? import.meta.env.MODE === 'production'
+      //   ? `/product-list${product.image.substring(1)}`  // Remove the dot from ./assets
+        ? new URL(product.image, import.meta.url).href
       : product.image
   };
 
