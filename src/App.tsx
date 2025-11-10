@@ -14,7 +14,9 @@ function App() {
     id: `prod-${i}`,
     image: typeof item.image === 'string'
       ? item.image
-      : item.image?.mobile ?? item.image?.desktop ?? item.image?.tablet ?? item.image?.thumbnail ?? '',
+      : import.meta.env.DEV
+        ? item.image?.mobile?.replace('/product-list', '') // Remove prefix in development
+        : item.image?.mobile ?? '', // Use full path in production
     name: item.name,
     category: item.category,
     price: item.price,
@@ -27,16 +29,6 @@ function App() {
 
 
 const handleAddToCart = (product: Product) => {
-  // Resolve image URL before adding to cart
-  const resolvedProduct = {
-    ...product,
-    image: product.image.startsWith('./')
-      // ? import.meta.env.MODE === 'production'
-      //   ? `/product-list${product.image.substring(1)}`  // Remove the dot from ./assets
-        ? new URL(product.image, import.meta.url).href
-      : product.image
-  };
-
   setCart(prevCart => {
     const existingItem = prevCart.find(item => item.product.id === product.id);
     
@@ -48,7 +40,7 @@ const handleAddToCart = (product: Product) => {
       );
     }
     
-    return [...prevCart, { product: resolvedProduct, quantity: 1 }];
+    return [...prevCart, { product, quantity: 1 }];
   });
 };
 const handleClearCart = () => {
@@ -95,12 +87,12 @@ const handleIncrease = (productId: string) => {
           {products.map((product) => (
             <div key={product.id} className='product__card'>
               <div className='product__image-container'>
-              <img
+              {/* <img
                 className='product__image'
                 src={
                   product.image.startsWith('./')
                     // ? import.meta.env.MODE === 'production'
-                    //   ? `/product-list${product.image.substring(1)}`  // Remove the dot from ./assets
+                    //   ? `/product-list${product.image.substring(1)}`  
                       ? new URL(product.image, import.meta.url).href
                     : product.image
                 }
@@ -108,12 +100,28 @@ const handleIncrease = (productId: string) => {
                 loading='lazy'
 
                 
+              /> */}
+              <img
+                className='product__image'
+                src={product.image}
+                alt={product.name}
+                loading='lazy'
+                onError={(e) => {
+                  // If image fails to load, try without the product-list prefix in development
+                  if (import.meta.env.DEV) {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src.includes('/product-list/')) {
+                      target.src = target.src.replace('/product-list/', '/');
+                    }
+                  }
+                }}
               />
                 <AddButton 
                 quantity={getCartQuantity(product.id)}
                 onAddToCart={() => handleAddToCart(product)}
                 onIncrease={() => handleIncrease(product.id)}
-                onDecrease={() => handleDecrease(product.id)} orderConfirmed={false}
+                onDecrease={() => handleDecrease(product.id)} 
+                orderConfirmed={false}
               />
               </div>
                 <div className='product__info'>

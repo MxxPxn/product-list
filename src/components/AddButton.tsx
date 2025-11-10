@@ -1,5 +1,5 @@
 import React from "react";
-import CartIcon from '../assets/images/icon-add-to-cart.svg';
+import CartIcon from '../assets/icon-add-to-cart.svg';
 
 interface AddButtonProps {
     orderConfirmed: boolean;

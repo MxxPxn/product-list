@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { CartItem } from "../types";
 import OrderConfirmationModal from "./OrderConfirmationModal";
+import EmptyCartIcon from '../assets/illustration-empty-cart.svg';
 import './Cart.css';
 
 
@@ -30,7 +31,7 @@ const handleStartNewOrder = () => {
       <div className="dessert__cart">
         <h2>Your Cart (0)</h2>
         <div className="cart-empty">
-          <img src="/src/assets/images/illustration-empty-cart.svg" alt="Empty cart" />
+          <img src={EmptyCartIcon} alt="Empty cart" />
           <p>Your added items will appear here</p>
         </div>
       </div>
